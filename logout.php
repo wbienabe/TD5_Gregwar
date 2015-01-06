@@ -3,9 +3,9 @@
 <?php
 if ($currentUser) {
     unset($_SESSION['user']);
-?>
-<script>document.location='logout.php';</script>
-<?php
+    ?>
+    <script>document.location = 'logout.php';</script>
+    <?php
 }
 ?>
 

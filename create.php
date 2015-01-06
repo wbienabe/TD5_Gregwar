@@ -2,28 +2,25 @@
 
 <h2>Créer un sondage</h2>
 
-<?php
-
+<?php 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!empty($_POST['question']) && !empty($_POST['answer1'])
-        && !empty($_POST['answer2']) && isset($_POST['answer3'])) {
-            $pdo->exec('INSERT INTO polls (question,answer1,answer2,answer3)
-                VALUES ("'.$_POST['question'].'","'.$_POST['answer1'].'",
-                    "'.$_POST['answer2'].'","'.$_POST['answer3'].'")');
-?>
-<div class="alert alert-success">
-    Sondage ajouté.
-</div>
-<?php
+    if (!empty($_POST['question']) && !empty($_POST['answer1']) && !empty($_POST['answer2']) && isset($_POST['answer3'])) {
+        $sql ='INSERT INTO polls (question, answer1, answer2, answer3) VALUES (?, ?, ?, ?)';
+        $query = $pdo->prepare($sql);
+        $query->execute(array($_POST['question'], $_POST['answer1'], $_POST['answer2'], $_POST['answer3']));
+        ?>
+        <div class="alert alert-success">
+            Sondage ajouté.
+        </div>
+        <?php
     } else {
-?>
-<div class="alert alert-danger">
-    Erreur de formulaire: vous devez préciser la question et au moins 2 réponses.
-</div>
-<?php
+        ?>
+        <div class="alert alert-danger">
+            Erreur de formulaire: vous devez préciser la question et au moins 2 réponses.
+        </div>
+        <?php
     }
 }
-
 ?>
 
 <form method="post" class="form-horizontal">
