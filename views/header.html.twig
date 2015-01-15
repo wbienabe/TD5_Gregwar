@@ -1,0 +1,33 @@
+{% block header %}
+    <h1>
+        <img src="{{ app.request.basePath }}/imgs/poll.png" />
+        Social <span class="sondage">Sondage</span>
+    </h1>
+    <nav class="navbar navbar-default">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="{% if app.request.requesturi == "/" %}active{% endif %}">
+                    <a href="{{ path('home') }}">Accueil</a>
+                </li>
+                {% if (app.session.get('user')) %}
+                    <li class="{% if app.request.requesturi == "/logout" %}active{% endif %}">
+                        <a href="{{ path('logout') }}">Déconnexion</a>
+                    </li>
+                    <li class="{% if app.request.requesturi == "/create" %}active{% endif %}">
+                        <a href="{{ path('create') }}">Nouveau sondage</a>
+                    </li>
+                {% else %}
+                    <li class="{% if app.request.requesturi == "/register" %}active{% endif %}">
+                        <a href="{{ path('register') }}">Inscription</a>
+                    </li>
+                    <li class="{% if app.request.requesturi == "/login" %}active{% endif %}">
+                        <a href="{{ path('login') }}">Identification</a>
+                    </li>
+                {% endif %}
+                <li class="{% if app.request.requesturi == "/polls" %}active{% endif %}">
+                    <a href="{{ path('polls') }}">Sondages</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
