@@ -16,20 +16,29 @@
             {% endif %}
             <h2>Créer un sondage</h2>
             <form method="post" class="form-horizontal">
-                <div class="form-group">
+                <div id="prout" class="form-group">
                     <label class="col-sm-2" for="question">Question</label>
                     <div class="col-sm-10">
                         <input class="form-control" type="text" id="question" name="question" />
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div id="rep1" class="form-group">
                     <label class="col-sm-2" for="answer1">Réponse 1</label>
                     <div class="col-sm-10">
-                        <input class="form-control" type="answer1" id="answer1" name="answer1" />
+                        <input required="true" class="form-control" type="answer1" id="answer1" name="answer1" />
                     </div>
                 </div>
-                <div class="form-group">
+
+                <button type="button" onclick="addPossibleAnswer()" class="btn btn-default btn-lg">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="false"></span> Ajouter une réponse
+                </button>
+
+                <button type="button" onclick="deleteAnswer()" class="btn btn-default btn-lg">
+                    <span class="glyphicon glyphicon-minus" aria-hidden="false"></span> Retirer une réponse
+                </button>
+
+                <!--<div class="form-group">
                     <label class="col-sm-2" for="answer2">Réponse 2</label>
                     <div class="col-sm-10">
                         <input  class="form-control" type="answer2" id="answer2" name="answer2" />
@@ -40,16 +49,62 @@
                     <div class="col-sm-10">
                         <input class="form-control" type="answer3" id="answer3" name="answer3" />
                     </div>
-                </div>
+                </div>-->
 
                 <div class="form-group">
                     <div class="col-sm-2">&nbsp;</div>
                     <div class="col-sm-10">
-                        <input type="submit" class="btn btn-success" value="Enregistrer" />
+                        <input style="margin-top: 10px;" type="submit" class="btn btn-success" value="Enregistrer" />
                     </div>
                 </div>
-            </form>
 
+            </form>
+            <script>
+                var currentRep = 1;
+                //Pour pas avoir un sondage avec une seule réponse possible..
+                addPossibleAnswer();
+                function addPossibleAnswer() {
+                    if ((document.getElementById("answer" + currentRep).value !== '') || (currentRep == 1)){
+                        var element = document.getElementById("rep" + currentRep);
+                        var node = document.createElement("div");
+                        node.setAttribute("class", "form-group");
+                        node.setAttribute("id", "rep" + (currentRep + 1));
+
+                        var node2 = document.createElement("label");
+                        node2.setAttribute("class", "col-sm-2");
+                        node2.setAttribute("for", "answer" + (currentRep + 1));
+                        var textnode = document.createTextNode("Réponse " + (currentRep + 1));
+                        node2.appendChild(textnode);
+
+                        var node3 = document.createElement("div");
+                        node3.setAttribute("class", "col-sm-10");
+
+                        var node4 = document.createElement("input");
+                        node4.setAttribute("class", "form-control");
+                        node4.setAttribute("type", "answer" + (currentRep + 1));
+                        node4.setAttribute("id", "answer" + (currentRep + 1));
+                        node4.setAttribute("required", "true");
+                        node4.setAttribute("name", "answer" + (currentRep + 1));
+
+                        node3.appendChild(node4);
+
+                        node.appendChild(node2);
+                        node.appendChild(node3);
+                        element.parentNode.insertBefore(node, element.nextSibling);
+                        currentRep++;
+                    } else{
+                        alert("Veuillez remplir la Réponse " + currentRep + " avant d'ajouter une autre réponse");
+                    }
+                    
+                }
+                function deleteAnswer() {
+                    var element = document.getElementById("rep" + currentRep);
+                    if (currentRep > 2) {
+                        element.parentElement.removeChild(element);
+                        currentRep--;
+                    }
+                }
+            </script>
         {% endif %}
     {% endif %}  
 {% endblock %}

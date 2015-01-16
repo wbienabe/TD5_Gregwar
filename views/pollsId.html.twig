@@ -9,40 +9,38 @@
         </div>
     {% else %}
         {% for poll in polls %}
-            <h2>{{ poll.question }}</h2>
+            <h2 class="">{{ poll.question }} (sondage ajouté par {{ poll.auteur_sondage }})</h2>
 
             <form action="" method="post">
                 {% set anyPoll = false %}
-                {% for answer in [1, 2, 3] %}
-                    {% set currentAnswer = 'answer'~answer %}
-                    {% if poll[currentAnswer] %}
+                {% set cpt = 1 %}
+                {% for answer in answers %}
+                    {#{% set currentAnswer = 'answer['~(answer-1)~']' %}#}
 
-                        <h3>
-                            <label>
-                                {% if ((app.session.get('user')) and (not userAnswered)) %}
-                                    <input type="radio" name="answer" value="{{ answer }}" />
-                                {% endif %}
-
-                                {{ poll[currentAnswer] }}
-
-                            </label>
-                        </h3>
-                        {% if answers != null %}
-
-                            {% if total != 0 %}
-                                {% set pct = (answers[answer]*100) / total %}
-                                {% set anyPoll = true %}
-                            {% else %}
-                                {% set pct = 0 %}
+                    <h3>
+                        <label>
+                            {% if ((app.session.get('user')) and (not userAnswered)) %}
+                                <input type="radio" name="answer" value="{{ cpt }}" />
                             {% endif %}
 
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ pct }}%">
-                                    {{ pct|round(2, 'floor') }}%
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endif %}
+                            {{ answer }}
+
+                        </label>
+                    </h3>
+                   
+                       {% if total != 0 %}
+                          {% set pct = (answersNb[cpt-1]*100) / total %}
+                          
+                          {% set anyPoll = true %}
+                      {% else %}
+                          {% set pct = 0 %}
+                      {% endif %}
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ pct }}%">
+                            {{ pct|round(2, 'floor') }}%
+                        </div>
+                    </div>
+                    {% set cpt = cpt + 1 %}
                 {% endfor %}
                 {% if not anyPoll %}
                     <div class="alert alert-info">

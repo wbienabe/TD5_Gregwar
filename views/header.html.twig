@@ -24,7 +24,7 @@
                         <a href="{{ path('login') }}">Identification</a>
                     </li>
                 {% endif %}
-                <li class="{% if app.request.requesturi == "/polls" %}active{% endif %}">
+                <li class="{% if (app.request.requesturi == "/polls") %}active{% endif %}">
                     <a href="{{ path('polls') }}">Sondages</a>
                 </li>
             </ul>
