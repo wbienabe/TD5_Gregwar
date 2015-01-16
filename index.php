@@ -2,21 +2,16 @@
 
 //app.request.resquestURI
 //use Symfony\Component\HttpFoundation\Request;
-
 $loader = include('vendor/autoload.php');
 $loader->add('', 'src');
-
 $app = new Silex\Application();
 $app['debug'] = true;
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
-
 $app->register(new Silex\Provider\SessionServiceProvider());
-
 $app->register(new Silex\Provider\TwigServiceProvider(), array('twig.path'=>__DIR__ . '/views'));
-
 $app['model'] = new Sondages\Model(
         '127.0.0.1', // Hôte
-        'td5_gregwar', // Base de données
+        'iut_gregwar_td5', // Base de données
         'root', // Utilisateur
         ''     // Mot de passe
 );
@@ -30,17 +25,14 @@ $app['model'] = new Sondages\Model(
   'password' => '',
   ),
   ));
-
   $app['userManager'] = $app->share(function() use ($app) {
   return new Sondages\UserManager($app['db'], $app);
   }); */
-
 $app->get('/', function() use ($app) {
     return $app['twig']->render('home.html.twig', array(
-                'user'=>$app['model']->checkConnection($app['session']->get('user'), $app)            
+                'user'=>$app['model']->checkConnection($app['session']->get('user'), $app)
     ));
 })->bind('home');
-
 /*
   $app->register(new Silex\Provider\SecurityServiceProvider(), array(
   'security.firewalls' => array(
@@ -60,7 +52,6 @@ $app->get('/', function() use ($app) {
   array('^/foo', ''), // This url is available as anonymous user
   )
   )); */
-
 $app->match('/login', function() use ($app) {
     if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
         if (!empty(filter_input(INPUT_POST, 'login') && !empty(filter_input(INPUT_POST, 'password')))) {
@@ -71,12 +62,10 @@ $app->match('/login', function() use ($app) {
                 'user'=>$app['model']->checkConnection($app['session']->get('user'))
     ));
 })->bind('login');
-
 $app->match('/logout', function() use ($app) {
     $app['session']->clear();
     return $app->redirect('/');
 })->bind('logout');
-
 $app->match('/register', function() use ($app) {
     if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') == 'POST') {
         if ((null !== filter_input(INPUT_POST, 'login')) && (null !== filter_input(INPUT_POST, 'password'))) {
@@ -90,14 +79,12 @@ $app->match('/register', function() use ($app) {
     return $app['twig']->render('register.html.twig', array(
                 'missingField'=>true));
 })->bind('register');
-
 // Ajouter un sondage
 /* $app->match('/create', function() use ($app) {
   if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') == 'POST') {
   if (!empty(filter_input(INPUT_POST, 'question')) &&
   !empty(filter_input(INPUT_POST, 'answer1')) &&
   !empty(filter_input(INPUT_POST, 'answer2'))) {
-
   $question = filter_input(INPUT_POST, 'question');
   $answer1 = filter_input(INPUT_POST, 'answer1');
   $answer2 = filter_input(INPUT_POST, 'answer2');
@@ -112,14 +99,12 @@ $app->match('/register', function() use ($app) {
   }
   return $app['twig']->render('create.html.twig');
   })->bind('create'); */
-
 $app->match('/create', function() use ($app) {
     /* echo "<script>alert('[" . filter_input(INPUT_POST, 'answer2') . "]')</script>";
       if ((filter_input(INPUT_POST, 'answer3') == '')) {
       //echo "<script>alert('[" . filter_input(INPUT_POST, 'answer3') . "]')</script>";
       echo "<script>alert('ya pas');</script>";
       } */
-
     if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') == 'POST') {
         if (!empty(filter_input(INPUT_POST, 'question')) &&
                 !empty(filter_input(INPUT_POST, 'answer1')) &&
@@ -136,9 +121,7 @@ $app->match('/create', function() use ($app) {
                     array_push($reponses, $reponse);
                 }
             }
-
             $question = filter_input(INPUT_POST, 'question');
-
             return $app['twig']->render('create.html.twig', array(
                         'formOK'=>$app['model']->addPoll($question, implode("|", $reponses), $app['session']->get('user'))));
         }
@@ -172,20 +155,17 @@ $app->match('/pollsId/{id}', function($id) use ($app) {
                 'userAnswered'=>$app['model']->didIAnswer($app['session']->get('user'), $id),
                 'polls'=>$app['model']->getPollsFromId($id),
                 'answers'=>$answers,
-                'answersNb'=>$app['model']->getAnswersPct($answers, $id) ,
+                'answersNb'=>$app['model']->getAnswersPct($answers, $id),
                 'total'=>$app['model']->getTotalAnswers($total)
     ));
 })->bind('pollsId');
 
 $app->match('/myPolls', function() use ($app) {
-
-
     return $app['twig']->render('myPolls.html.twig', array(
                 'user'=>$app['model']->checkConnection($app['session']->get('user')),
                 'sondages'=>$app['model']->getMyPolls($app['session']->get('user'))
     ));
 })->bind('myPolls');
-
 /*
   $app->post('/user/{action}', function ($action) use ($app) {
   switch ($action) {
@@ -205,11 +185,9 @@ $app->match('/myPolls', function() use ($app) {
   return false;
   }
   })->bind('userAction'); */
-
 // Fait remonter les erreurs
 $app->error(function($error) {
     throw $error;
 });
-
 //$app->boot();
 $app->run();

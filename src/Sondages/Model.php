@@ -38,7 +38,6 @@ class Model {
 
     public function getPollsFromId($id) {
         /* $sql = 'SELECT * FROM polls WHERE id=?';
-          var_dump($id);
           $query = $this->pdo->prepare($sql);
           $query->execute(array($id));
           return $query->fetch(); */
@@ -154,13 +153,11 @@ class Model {
 
     function getAnswersPct($answers, $id) {
         $nbTab = array();
-        //var_dump($answers);
         $cpt = 1;
         foreach ($answers as $answer) {
             array_push($nbTab, $this->getCountOfAnswer($id, $cpt));
             $cpt++;
         }
-        // print_r($nbTab);
         return $nbTab;
     }
 
@@ -172,7 +169,6 @@ class Model {
         while ($res = $query->fetch()) {
             array_push($countTab, $res["answer"]);
         }
-        //var_dump($countTab);
         return $countTab;
     }
 
@@ -189,5 +185,4 @@ class Model {
         $query = $this->pdo->prepare($sql);
         $query->execute(array($userId, $pollId, $answer));
     }
-
 }
